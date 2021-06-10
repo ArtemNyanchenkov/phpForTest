@@ -9,45 +9,38 @@
 	5. Разместите код в гите и пришлите ссылку
 */
 
-/**
- * Класс для работы с API
- *
- * @author		User Name
- * @version		v.1.0 (dd/mm/yyyy)
- */
-
 class Api
 {
-	private array $array;
-	private  $template;
+    public array $array;
+    public string $template;
     
+    public function __construct(array $array, $template )
+        {
+            $this->array= $array;
+            $this->template = $this->validTemplate($template);
+        }
 
-	public function __construct(array $array, $template )
-	{
-		$this->array= $array;
-		$this->template = $this->validTemplate($template);
-	}
 
-    private function validTemplate ($template) {
-		if(!is_string($template))
-		{
-			return implode(' ,', $template);
-		} 
-			
-	}
+    private function validTemplate ($template): string
+    {
+        if(!is_string($template))
+        {
+            return implode(' ,', $template);
+        }
+    return $template;
+    }
 
-	public function get_api_path(array $array, string $template) : string 
-	{
-		
-		foreach($array as $k => $v)
-		    {
-		        if (strstr($template,$k) == true ) {
-		            $result=(str_replace(array_keys($array), array_values($array), $template));
-		        };
-	        }
-			return $result;
-	}
-	
+    public function get_api_path() : string
+    {
+        $result='';
+        foreach($this->array as $k => $v)
+        {
+            if (strstr($this->template,$k) == true ) {
+            $result=(str_replace(array_keys($this->array), array_values($this->array), $this->template));
+            }
+        }
+    return $result;
+    }
 }
 
 $user =
@@ -68,11 +61,12 @@ $api_path_templates =
 
 $api = new Api($user, $api_path_templates);
 
-var_dump($api);
+$api_paths=$api->get_api_path();
 
 echo json_encode($api_paths, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE);
 
 $expected_result = ['/api/items/20/John%20Dow','/api/items/20/QA','/api/items/20/100'];
 
+// Переписал код так как я это вижу
 
 ?>
